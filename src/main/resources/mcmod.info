@@ -1,0 +1,16 @@
+[
+{
+  "modid": "molsci",
+  "name": "Molecular Science",
+  "description": "This mod adds many new technologies based on quantum mechanics in the form of new blocks, items, and mechanics.",
+  "version": "0.1a",
+  "mcversion": "1.7.2",
+  "url": "",
+  "updateUrl": "",
+  "authors": ["defiant810"],
+  "credits": "Code: defiant810",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
