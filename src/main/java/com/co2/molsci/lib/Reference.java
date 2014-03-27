@@ -9,4 +9,9 @@ public class Reference
 	
 	public static final String CLIENT_PROXY_CLASS = "com.co2.molsci.proxy.ClientProxy";
 	public static final String SERVER_PROXY_CLASS = "com.co2.molsci.proxy.ServerProxy";
+	
+	public static String toResourceString(String s)
+	{
+		return Reference.MOD_ID + ":" + s;
+	}
 }

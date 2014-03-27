@@ -5,6 +5,7 @@ build/
 eclipse/
 logs/
 config/
+crash-reports/
 
 #################
 ## Eclipse

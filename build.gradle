@@ -17,6 +17,15 @@ buildscript {
 
 apply plugin: 'forge'
 
+sourceSets
+{
+	main
+	{
+		java { srcDirs = ["$projectDir/code"] }
+		resources { srcDirs = ["$projectDir/resources"] }
+	}
+}
+
 version = "1.7.2-0.1a"
 group= "com.co2.molsci" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "MolecularScience"
