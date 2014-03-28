@@ -1,5 +1,12 @@
 package com.co2.molsci;
 
+import java.io.File;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.co2.molsci.common.MSContent;
+import com.co2.molsci.config.ConfigHandler;
 import com.co2.molsci.lib.Reference;
 import com.co2.molsci.proxy.IProxy;
 
@@ -20,11 +27,24 @@ public class MolecularScience
 	@SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
 	public static IProxy proxy;
 	
+	//Logger object for this mod
+	public static final Logger logger = LogManager.getLogger("MolSci");
+	
+	//Content manager
+	public static MSContent content;
+	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
 		//Set the mod version
 		e.getModMetadata().version = Reference.MOD_VERSION;
+		
+		//Load the configs
+		ConfigHandler.init(e.getModConfigurationDirectory() + File.separator + Reference.MOD_ID.toLowerCase() 
+				+ File.separator);
+		
+		//Initialize content
+		content = new MSContent();
 	}
 	
 	@EventHandler
