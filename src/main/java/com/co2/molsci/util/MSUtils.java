@@ -15,7 +15,7 @@ public class MSUtils
 	
 	public static boolean itemStackMatch(ItemStack s1, ItemStack s2)
 	{
-		return (s1.getItem() == s1.getItem()) && (s1.getItemDamage() == s2.getItemDamage());
+		return (s1.getItem() == s2.getItem()) && (s1.getItemDamage() == s2.getItemDamage());
 	}
 	
 	public static boolean itemStackArrayContains(ItemStack[] arr, ItemStack stack)

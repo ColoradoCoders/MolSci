@@ -1,5 +1,6 @@
 package com.co2.molsci.common;
 
+import com.co2.molsci.block.BlockCoffeeMachine;
 import com.co2.molsci.item.food.ItemCoffeeBean;
 import com.co2.molsci.item.food.ItemCoffeeCup;
 
@@ -27,6 +28,9 @@ public class MSContent
 	
 	private void initBlocks()
 	{
+		//Food Blocks
+		MSRepo.coffeeMachine = new BlockCoffeeMachine();
 		
+		GameRegistry.registerBlock(MSRepo.coffeeMachine, "coffeeMachine");
 	}
 }

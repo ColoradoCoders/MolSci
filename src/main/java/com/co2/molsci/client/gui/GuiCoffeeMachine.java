@@ -1,10 +1,10 @@
 package com.co2.molsci.client.gui;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
 
 import com.co2.molsci.client.container.ContainerCoffeeMachine;
 import com.co2.molsci.entity.tile.TileEntityCoffeeMachine;
@@ -14,10 +14,13 @@ public class GuiCoffeeMachine extends GuiContainer
 {
 	public static final ResourceLocation texture = new ResourceLocation(Reference.MOD_ID.toLowerCase(), "textures/gui/coffeeMachine.png");
 	
+	public TileEntityCoffeeMachine entity;
+	
 	public GuiCoffeeMachine(InventoryPlayer player, TileEntityCoffeeMachine entity)
 	{
 		super(new ContainerCoffeeMachine(player, entity));
 		
+		this.entity = entity;
 		this.xSize = 176;
 		this.ySize = 166;
 	}
@@ -38,6 +41,21 @@ public class GuiCoffeeMachine extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j)
 	{
-		//TODO draw text for name and liquid amounts
+		fontRendererObj.drawString("Coffee Machine", 5, 4, 4210752);
+		
+		String water = String.format("%4d/%d mB", entity.getWaterLevel(), TileEntityCoffeeMachine.MAX_WATER_LEVEL);
+		String milk = String.format ("%4d/%d mB", entity.getMilkLevel(), TileEntityCoffeeMachine.MAX_MILK_LEVEL);
+		
+		int blue = 0;
+		blue += (255 << 24);
+		blue += 255;
+		int white = 0;
+		white += (255 << 24);
+		white += (255 << 16);
+		white += (255 << 8);
+		white += 255;
+		
+		fontRendererObj.drawString(water, 80, 31, blue);
+		fontRendererObj.drawString(milk, 80, 45, white);
 	}
 }
