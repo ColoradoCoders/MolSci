@@ -7,3 +7,5 @@ item.molsci.coffeeCup.lightRoast.name=Light Roast Coffee
 item.molsci.coffeeCup.listRoastCream.name=Light Roast Coffee with Cream
 item.molsci.coffeeCup.darkRoast.name=Dark Roast Coffee
 item.molsci.coffeeCup.darkRoastCream.name=Dark Roast Coffee with Cream
+
+tile.coffeeMachine.name=Coffee Machine

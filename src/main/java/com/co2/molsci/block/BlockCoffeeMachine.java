@@ -17,6 +17,7 @@ public class BlockCoffeeMachine extends MSBlockContainer
 	public BlockCoffeeMachine()
 	{
 		super(Material.ground, 1.0f, new String[]{ "food/coffeeMachine" });
+		this.setBlockName("coffeeMachine");
 	}
 	
 	@Override

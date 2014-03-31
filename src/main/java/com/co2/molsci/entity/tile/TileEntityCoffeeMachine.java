@@ -94,6 +94,11 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 		}
 	}
 	
+	public boolean hasOutput()
+	{
+		return inventory[3] != null;
+	}
+	
 	public boolean canTakeBucket()
 	{
 		return (inventory[4] == null) || (inventory[4].stackSize < 16);
