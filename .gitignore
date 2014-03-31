@@ -5,6 +5,7 @@ build/
 eclipse/
 logs/
 config/
+!src/main/java/com/co2/molsci/config/
 crash-reports/
 
 #################
