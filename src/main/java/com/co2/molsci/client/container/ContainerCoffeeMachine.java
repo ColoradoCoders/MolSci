@@ -24,11 +24,12 @@ public class ContainerCoffeeMachine extends ContainerMS
 		
 		this.bindPlayerInventory(player);
 		
-		//Add the 4 container slots
-		this.addSlotToContainer(new WhitelistSlot(entity, 0, 107, 8, liquids));
-		this.addSlotToContainer(new WhitelistSlot(entity, 1, 53, 31, beans));
-		this.addSlotToContainer(new WhitelistSlot(entity, 2, 53, 58, new ItemStack[]{ new ItemStack(MSRepo.coffeeCup, 1, 0) }));
-		this.addSlotToContainer(new OutputSlot(entity, 3, 107, 58));
+		//Add the 5 container slots
+		this.addSlotToContainer(new WhitelistSlot(entity, 0, 89, 8, liquids));
+		this.addSlotToContainer(new WhitelistSlot(entity, 1, 35, 31, beans));
+		this.addSlotToContainer(new WhitelistSlot(entity, 2, 35, 58, new ItemStack[]{ new ItemStack(MSRepo.coffeeCup, 1, 0) }));
+		this.addSlotToContainer(new OutputSlot(entity, 3, 89, 58));
+		this.addSlotToContainer(new OutputSlot(entity, 4, 107, 8));
 	}
 	
 	@Override

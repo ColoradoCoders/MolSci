@@ -19,19 +19,23 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 	public static final int MAX_MILK_LEVEL = 1000;
 	public static final int MAX_WATER_LEVEL = 5000;
 	
-	//Inventory slots: 0 = liquid input, 1 = coffee beans, 2 = cup input, 3 = cup output
+	//Inventory slots: 0 = liquid input, 1 = coffee beans, 2 = cup input, 3 = cup output, 4 = bucket output
 	private ItemStack[] inventory;
 	
 	//The liquid levels in the machine
 	private int waterLevel;
 	private int milkLevel;
 	
+	//If it should use cream
+	private boolean useCream;
+	
 	public TileEntityCoffeeMachine()
 	{
 		super();
-		inventory = new ItemStack[4];
+		inventory = new ItemStack[5];
 		addWaterIfPossible(5000);
 		addMilkIfPossible(100);
+		useCream = true;
 	}
 	
 	@Override
@@ -39,18 +43,35 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 	{
 		super.updateEntity();
 		
-		if (inventory[0] != null && inventory[0].getItem() == Items.milk_bucket && addMilkIfPossible(1000))
-			setInventorySlotContents(0, new ItemStack(Items.bucket));
-		else if (inventory[0] != null && inventory[0].getItem() == Items.water_bucket && addWaterIfPossible(1000))
-			setInventorySlotContents(0, new ItemStack(Items.bucket));
-		
-		//If there isn't enough water or the output slot is full
+		if (inventory[0] != null && inventory[0].getItem() == Items.milk_bucket)
+		{
+			while (addMilkIfPossible(1000) && inventory[0] != null && canTakeBucket())
+			{
+				decrStackSize(0, 1);
+				if (inventory[4] != null)
+					++(inventory[4].stackSize);
+				else
+					setInventorySlotContents(4, new ItemStack(Items.bucket));
+			}
+		}
+		else if (inventory[0] != null && inventory[0].getItem() == Items.water_bucket)
+		{
+			while (addWaterIfPossible(1000) && inventory[0] != null && canTakeBucket())
+			{
+				decrStackSize(0, 1);
+				if (inventory[4] != null)
+					++(inventory[4].stackSize);
+				else
+					setInventorySlotContents(4, new ItemStack(Items.bucket));
+			}
+		}
+			
 		if (!canRemoveWater(500) || inventory[3] != null)
 			return;
 		
-		if (inventory[1] != null && inventory[2] != null)
+		if (inventory[1] != null && inventory[2] != null && inventory[3] == null)
 		{
-			boolean useCreamer = removeMilkIfPossible(100);
+			boolean useCreamer = useCream && removeMilkIfPossible(100);
 			removeWaterIfPossible(500);
 			
 			if (inventory[1].getItemDamage() == 1)
@@ -65,12 +86,17 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 				if (useCreamer)
 					setInventorySlotContents(3, new ItemStack(MSRepo.coffeeCup, 1, 4));
 				else
-					setInventorySlotContents(2, new ItemStack(MSRepo.coffeeCup, 1, 3));
+					setInventorySlotContents(3, new ItemStack(MSRepo.coffeeCup, 1, 3));
 			}
 			
 			decrStackSize(1, 1);
 			decrStackSize(2, 1);
 		}
+	}
+	
+	public boolean canTakeBucket()
+	{
+		return (inventory[4] == null) || (inventory[4].stackSize < 16);
 	}
 	
 	@Override
@@ -169,6 +195,7 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 		
 		tag.setInteger("Water", waterLevel);
 		tag.setInteger("Milk", milkLevel);
+		tag.setBoolean("UseCream", useCream);
 		
 		NBTTagList list = new NBTTagList();
 		for (int i = 0; i < inventory.length; ++i)
@@ -191,9 +218,10 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 		
 		waterLevel = tag.getInteger("Water");
 		milkLevel = tag.getInteger("Milk");
+		useCream = tag.getBoolean("UseCream");
 		
 		NBTTagList list = tag.getTagList("Items", Constants.NBT.TAG_COMPOUND);
-		inventory = new ItemStack[4];
+		inventory = new ItemStack[5];
 		for (int i = 0; i < inventory.length && i < list.tagCount(); ++i)
 		{
 			NBTTagCompound stack = (NBTTagCompound) list.getCompoundTagAt(i);
@@ -215,6 +243,16 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
 	{
 		this.readFromNBT(packet.func_148857_g());
+	}
+	
+	public boolean shouldUseCream()
+	{
+		return useCream;
+	}
+	
+	public void setUseCream(boolean b)
+	{
+		useCream = b;
 	}
 	
 	public int getWaterLevel()
