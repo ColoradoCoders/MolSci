@@ -33,8 +33,8 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 	{
 		super();
 		inventory = new ItemStack[5];
-		addWaterIfPossible(5000);
-		addMilkIfPossible(100);
+		waterLevel = 0;
+		milkLevel = 0;
 		useCream = true;
 	}
 	

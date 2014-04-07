@@ -18,6 +18,7 @@ public class BlockCoffeeMachine extends MSBlockContainer
 	{
 		super(Material.ground, 1.0f, new String[]{ "food/coffeeMachine" });
 		this.setBlockName("coffeeMachine");
+		this.setBlockBounds(0.375f, 0.0f, 0.15625f, 0.625f, 0.625f, 0.625f);
 	}
 	
 	@Override
