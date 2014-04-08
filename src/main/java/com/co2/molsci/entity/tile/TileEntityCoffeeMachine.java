@@ -19,6 +19,8 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 	public static final int MAX_MILK_LEVEL = 1000;
 	public static final int MAX_WATER_LEVEL = 5000;
 	
+	public static TileEntityCoffeeMachine last;
+	
 	//Inventory slots: 0 = liquid input, 1 = coffee beans, 2 = cup input, 3 = cup output, 4 = bucket output
 	private ItemStack[] inventory;
 	
@@ -42,56 +44,76 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 	public void updateEntity()
 	{
 		super.updateEntity();
+	}
+	
+	private void updateInput()
+	{
+		if (hasOutput() || inventory[1] == null || inventory[2] == null)
+			return;
 		
+		int type = inventory[1].getItemDamage();
+		
+		if (inventory[1].stackSize <= 1)
+			inventory[1] = null;
+		else
+			--(inventory[1].stackSize);
+		
+		if (inventory[2].stackSize <= 1)
+			inventory[2] = null;
+		else
+			--(inventory[2].stackSize);
+		
+		boolean cream = useCream && removeMilkIfPossible(50);
+		
+		System.out.println("Update. hasOutput: " + hasOutput() + " inv[3]: " + (inventory[3] != null) + " cream: " + cream);
+		
+		switch (type)
+		{
+		case 1:
+			if (cream)
+				inventory[3] = new ItemStack(MSRepo.coffeeCup, 1, 2);
+			else
+				inventory[3] = new ItemStack(MSRepo.coffeeCup, 1, 1);
+			break;
+		case 2:
+			if (cream)
+				inventory[3] = new ItemStack(MSRepo.coffeeCup, 1, 4);
+			else
+				inventory[3] = new ItemStack(MSRepo.coffeeCup, 1, 3);
+			break;
+		}
+	}
+	
+	private void tryAddLiquids()
+	{
 		if (inventory[0] != null && inventory[0].getItem() == Items.milk_bucket)
 		{
-			while (addMilkIfPossible(1000) && inventory[0] != null && canTakeBucket())
+			if (canTakeBucket() && addMilkIfPossible(1000))
 			{
-				decrStackSize(0, 1);
+				inventory[0] = null;
 				if (inventory[4] != null)
 					++(inventory[4].stackSize);
 				else
-					setInventorySlotContents(4, new ItemStack(Items.bucket));
+					inventory[4] = new ItemStack(Items.bucket);
 			}
 		}
 		else if (inventory[0] != null && inventory[0].getItem() == Items.water_bucket)
 		{
-			while (addWaterIfPossible(1000) && inventory[0] != null && canTakeBucket())
+			if (canTakeBucket() && addWaterIfPossible(1000))
 			{
-				decrStackSize(0, 1);
+				inventory[0] = null;
 				if (inventory[4] != null)
 					++(inventory[4].stackSize);
 				else
-					setInventorySlotContents(4, new ItemStack(Items.bucket));
+					inventory[4] = new ItemStack(Items.bucket);
 			}
 		}
-			
-		if (!canRemoveWater(500) || inventory[3] != null)
-			return;
-		
-		if (inventory[1] != null && inventory[2] != null && inventory[3] == null)
-		{
-			boolean useCreamer = useCream && removeMilkIfPossible(100);
-			removeWaterIfPossible(500);
-			
-			if (inventory[1].getItemDamage() == 1)
-			{
-				if (useCreamer)
-					setInventorySlotContents(3, new ItemStack(MSRepo.coffeeCup, 1, 2));
-				else
-					setInventorySlotContents(3, new ItemStack(MSRepo.coffeeCup, 1, 1));
-			}
-			else
-			{
-				if (useCreamer)
-					setInventorySlotContents(3, new ItemStack(MSRepo.coffeeCup, 1, 4));
-				else
-					setInventorySlotContents(3, new ItemStack(MSRepo.coffeeCup, 1, 3));
-			}
-			
-			decrStackSize(1, 1);
-			decrStackSize(2, 1);
-		}
+	}
+	
+	private void handleInventoryChange()
+	{
+		tryAddLiquids();
+		updateInput();
 	}
 	
 	public boolean hasOutput()
@@ -101,7 +123,7 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 	
 	public boolean canTakeBucket()
 	{
-		return (inventory[4] == null) || (inventory[4].stackSize < 16);
+		return (inventory[4] == null) || (inventory[4].stackSize < 64);
 	}
 	
 	@Override
@@ -128,7 +150,7 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 			else
 			{
 				stack = stack.splitStack(count);
-				markDirty();
+				//handleInventoryChange();
 			}
 		}
 		
@@ -151,7 +173,8 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 		if (stack != null && stack.stackSize > getInventoryStackLimit())
 			stack.stackSize = getInventoryStackLimit();
 		
-		markDirty();
+		if (stack == null)
+			handleInventoryChange();
 	}
 
 	@Override
@@ -163,7 +186,6 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 	@Override
 	public boolean hasCustomInventoryName() 
 	{
-		//TODO: look at this
 		return true;
 	}
 
