@@ -1,8 +1,12 @@
 package com.co2.molsci.block;
 
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.co2.molsci.MolecularScience;
@@ -46,6 +50,37 @@ public class BlockCoffeeMachine extends MSBlockContainer
 	public boolean canPlaceBlockAt(World world, int x, int y, int z)
 	{
 		return World.doesBlockHaveSolidTopSurface(world, x, y - 1, z);
+	}
+	
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
+	{
+		int dir = MathHelper.floor_double((double)(entity.rotationYaw * 4.0f / 360.0f) + 0.5) & 3;
+		
+		world.setBlockMetadataWithNotify(x, y, z, dir, 2);
+	}
+	
+	@Override
+	public void setBlockBoundsBasedOnState(IBlockAccess access, int x, int y, int z)
+	{
+		int meta = access.getBlockMetadata(x, y, z);
+		
+		switch (meta)
+		{
+		case 1:
+			this.setBlockBounds(0.375f, 0.0f, 0.375f, 0.84375f, 0.625f, 0.625f);
+			return;
+		case 2:
+			this.setBlockBounds(0.375f, 0.0f, 0.375f, 0.625f, 0.625f, 0.84375f);
+			return;
+		case 3:
+			this.setBlockBounds(0.15625f, 0.0f, 0.375f, 0.625f, 0.625f, 0.625f);
+			return;
+		case 0:
+		default:
+			this.setBlockBounds(0.375f, 0.0f, 0.15625f, 0.625f, 0.625f, 0.625f);
+			return;
+		}
 	}
 
 	@Override

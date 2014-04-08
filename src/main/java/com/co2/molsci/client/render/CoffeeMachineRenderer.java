@@ -44,6 +44,18 @@ public class CoffeeMachineRenderer extends TileEntitySpecialRenderer
 		GL11.glRotatef(180.0f, 1.0f, 0.0f, 1.0f);
 		GL11.glScalef(-1.0f, 1.0f, 1.0f);
 		GL11.glRotatef(180.0f, 0.0f, 0.0f, 0.0f);
+		switch (entity.getWorldObj().getBlockMetadata(entity.xCoord, entity.yCoord, entity.zCoord))
+		{
+		case 1:
+			GL11.glRotatef(90, 0, 1, 0);
+			break;
+		case 2:
+			GL11.glRotatef(180, 0, 1, 0);
+			break;
+		case 3:
+			GL11.glRotatef(270, 0, 1, 0);
+			break;
+		}
 		GL11.glTranslatef(0.0f, -2.0f, 0.0f);
 		
 		model.render((Entity)null, 0.0f, 0.0f, -0.0f, 0.0f, 0.0f, 0.0625f);
