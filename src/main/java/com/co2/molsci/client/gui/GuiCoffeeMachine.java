@@ -31,21 +31,24 @@ public class GuiCoffeeMachine extends GuiContainer
 	public void initGui()
 	{
 		super.initGui();
-		this.buttonList.add(new GuiButton(0, this.guiLeft + 112, this.guiTop + 56, 55, 20, entity.shouldUseCream() ? "Cream" : "No Cream"));
+		this.buttonList.add(0, new GuiButton(0, this.guiLeft + 112, this.guiTop + 56, 55, 20, entity.shouldUseCream() ? "Cream" : "No Cream"));
 	}
 	
 	@Override
 	protected void actionPerformed(GuiButton button)
 	{
-		if (entity.shouldUseCream())
+		if (buttonList.indexOf(button) == 0) 
 		{
-			button.displayString = "No Cream";
-			entity.setUseCream(false);
-		}
-		else
-		{
-			button.displayString = "Cream";
-			entity.setUseCream(true);
+			if (entity.shouldUseCream()) 
+			{
+				button.displayString = "No Cream";
+				entity.setUseCream(false);
+			} 
+			else 
+			{
+				button.displayString = "Cream";
+				entity.setUseCream(true);
+			}
 		}
 	}
 

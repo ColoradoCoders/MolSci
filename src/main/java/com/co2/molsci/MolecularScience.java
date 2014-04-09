@@ -9,6 +9,7 @@ import com.co2.molsci.client.MSGuiHandler;
 import com.co2.molsci.common.MSContent;
 import com.co2.molsci.config.ConfigHandler;
 import com.co2.molsci.lib.Reference;
+import com.co2.molsci.network.PacketHandler;
 import com.co2.molsci.proxy.IProxy;
 
 import cpw.mods.fml.common.Mod;
@@ -52,6 +53,9 @@ public class MolecularScience
 	@EventHandler
 	public void init(FMLInitializationEvent e)
 	{
+		//Register the packet handler
+		PacketHandler.initialize();
+		
 		//Register the GUI handler
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new MSGuiHandler());
 		

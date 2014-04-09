@@ -2,6 +2,7 @@ package com.co2.molsci.entity.tile;
 
 import com.co2.molsci.common.MSRepo;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
@@ -31,12 +32,15 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 	//If it should use cream
 	private boolean useCream;
 	
+	private int lastCraft;
+	
 	public TileEntityCoffeeMachine()
 	{
 		super();
 		inventory = new ItemStack[5];
 		waterLevel = 0;
 		milkLevel = 0;
+		lastCraft = 0;
 		useCream = true;
 	}
 	
@@ -44,14 +48,16 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 	public void updateEntity()
 	{
 		super.updateEntity();
+		++lastCraft;
 	}
 	
 	private void updateInput()
-	{
-		if (hasOutput() || inventory[1] == null || inventory[2] == null)
+	{	
+		if (hasOutput() || inventory[1] == null || inventory[2] == null || !removeWaterIfPossible(250))
 			return;
 		
 		int type = inventory[1].getItemDamage();
+		System.out.println("Last craft: " + lastCraft);
 		
 		if (inventory[1].stackSize <= 1)
 			inventory[1] = null;
@@ -80,7 +86,8 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 		if (cream)
 			inventory[3].setItemDamage(inventory[3].getItemDamage() + 1);
 		
-		updateInput();
+		lastCraft = 0;
+		System.out.println("Reset lastCraft for entity " + this + " server: " + FMLCommonHandler.instance().getEffectiveSide().isServer());
 	}
 	
 	private void tryAddLiquids()
@@ -111,8 +118,14 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 	
 	private void handleInventoryChange()
 	{
+		if (worldObj != null && worldObj.isRemote)
+			return;
+		
 		tryAddLiquids();
 		updateInput();
+		
+		if (worldObj != null)
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 	
 	public boolean hasOutput()
@@ -149,7 +162,7 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 			else
 			{
 				stack = stack.splitStack(count);
-				//handleInventoryChange();
+				markDirty();
 			}
 		}
 		
@@ -171,8 +184,10 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 		
 		if (stack != null && stack.stackSize > getInventoryStackLimit())
 			stack.stackSize = getInventoryStackLimit();
-		
+
 		handleInventoryChange();
+		
+		markDirty();
 	}
 
 	@Override
