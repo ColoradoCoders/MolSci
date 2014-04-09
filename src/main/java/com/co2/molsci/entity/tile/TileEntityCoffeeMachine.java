@@ -63,25 +63,24 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 		else
 			--(inventory[2].stackSize);
 		
-		boolean cream = useCream && removeMilkIfPossible(50);
+		boolean cream = shouldUseCream() && removeMilkIfPossible(50);
 		
 		System.out.println("Update. hasOutput: " + hasOutput() + " inv[3]: " + (inventory[3] != null) + " cream: " + cream);
 		
 		switch (type)
 		{
 		case 1:
-			if (cream)
-				inventory[3] = new ItemStack(MSRepo.coffeeCup, 1, 2);
-			else
-				inventory[3] = new ItemStack(MSRepo.coffeeCup, 1, 1);
+			inventory[3] = new ItemStack(MSRepo.coffeeCup, 1, 1);
 			break;
 		case 2:
-			if (cream)
-				inventory[3] = new ItemStack(MSRepo.coffeeCup, 1, 4);
-			else
-				inventory[3] = new ItemStack(MSRepo.coffeeCup, 1, 3);
+			inventory[3] = new ItemStack(MSRepo.coffeeCup, 1, 3);
 			break;
 		}
+		
+		if (cream)
+			inventory[3].setItemDamage(inventory[3].getItemDamage() + 1);
+		
+		updateInput();
 	}
 	
 	private void tryAddLiquids()
@@ -173,8 +172,7 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 		if (stack != null && stack.stackSize > getInventoryStackLimit())
 			stack.stackSize = getInventoryStackLimit();
 		
-		if (stack == null)
-			handleInventoryChange();
+		handleInventoryChange();
 	}
 
 	@Override
