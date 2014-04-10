@@ -57,22 +57,12 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory, I
 	
 	private void updateInput()
 	{	
-		if (hasOutput() || inventory[1] == null || inventory[2] == null || !removeWaterIfPossible(250))
+		if (inventory[1] == null || inventory[2] == null || !canRemoveWater(250))
 			return;
 		
 		int type = inventory[1].getItemDamage();
 		
-		if (inventory[1].stackSize <= 1)
-			inventory[1] = null;
-		else
-			--(inventory[1].stackSize);
-		
-		if (inventory[2].stackSize <= 1)
-			inventory[2] = null;
-		else
-			--(inventory[2].stackSize);
-		
-		boolean cream = shouldUseCream() && removeMilkIfPossible(50);
+		boolean cream = shouldUseCream() && canRemoveMilk(50);
 		
 		switch (type)
 		{
@@ -114,10 +104,27 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory, I
 		}
 	}
 	
-	private void handleInventoryChange()
+	private void handleInventoryChange(boolean removed)
 	{
 		if (worldObj != null && worldObj.isRemote)
 			return;
+		
+		if (removed)
+		{
+			removeWaterIfPossible(250);
+			if (useCream)
+				removeMilkIfPossible(50);
+			
+			if (inventory[1].stackSize <= 1)
+				inventory[1] = null;
+			else
+				--(inventory[1].stackSize);
+			
+			if (inventory[2].stackSize <= 1)
+				inventory[2] = null;
+			else
+				--(inventory[2].stackSize);
+		}
 		
 		tryAddLiquids();
 		updateInput();
@@ -183,7 +190,7 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory, I
 		if (stack != null && stack.stackSize > getInventoryStackLimit())
 			stack.stackSize = getInventoryStackLimit();
 
-		handleInventoryChange();
+		handleInventoryChange((slot == 3) && (stack == null));
 		
 		markDirty();
 	}
@@ -378,7 +385,10 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory, I
 		case 0:
 			useCream = !useCream;
 			if (FMLCommonHandler.instance().getEffectiveSide().isServer())
+			{
+				handleInventoryChange(false);
 				PacketHandler.instance.sendToAllClients(packet, this.worldObj, this.xCoord, this.yCoord, this.zCoord, -1);
+			}
 			break;
 		}
 	}
