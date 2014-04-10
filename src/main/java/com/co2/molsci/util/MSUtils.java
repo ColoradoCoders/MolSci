@@ -17,6 +17,7 @@ public class MSUtils
 		return false;
 	}
 	
+	// matches itemStacks ignoring metadata
 	public static boolean itemStackMatch(ItemStack s1, ItemStack s2)
 	{
 		return (s1.getItem() == s2.getItem()) && (s1.getItemDamage() == s2.getItemDamage());
