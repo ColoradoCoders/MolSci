@@ -33,46 +33,53 @@ public class PacketPayloadArrays extends PacketPayload
 			stringPayload = MSUtils.concat(stringPayload, other.stringPayload);
 	}
 	
-	public void append(int[] other)
+	public PacketPayloadArrays append(int[] other)
 	{
 		if (other == null || other.length < 1)
-			return;
+			return this;
 		
 		intPayload = MSUtils.concat(intPayload, other);
+		
+		return this;
 	}
 	
-	public void append(int other)
+	public PacketPayloadArrays append(int other)
 	{
 		intPayload = MSUtils.concat(intPayload, new int[]{ other });
+		return this;
 	}
 	
-	public void append(float[] other)
+	public PacketPayloadArrays append(float[] other)
 	{
 		if (other == null || other.length < 1)
-			return;
+			return this;
 		
 		floatPayload = MSUtils.concat(floatPayload, other);
+		return this;
 	}
 	
-	public void append(float other)
+	public PacketPayloadArrays append(float other)
 	{
 		floatPayload = MSUtils.concat(floatPayload, new float[]{ other });
+		return this;
 	}
 	
-	public void append(String[] other)
+	public PacketPayloadArrays append(String[] other)
 	{
 		if (other == null || other.length < 1)
-			return;
+			return this;
 		
 		stringPayload = MSUtils.concat(stringPayload, other);
+		return this;
 	}
 	
-	public void append(String other)
+	public PacketPayloadArrays append(String other)
 	{
 		if (MSUtils.isNullOrEmpty(other))
-			return;
+			return this;
 		
 		stringPayload = MSUtils.concat(stringPayload, new String[]{ other });
+		return this;
 	}
 	
 	@Override

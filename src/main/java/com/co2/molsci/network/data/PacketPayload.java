@@ -9,6 +9,17 @@ public abstract class PacketPayload
 		NULL, ARRAY
 	}
 	
+	public static PacketPayload makePayload(byte type)
+	{
+		switch (type)
+		{
+		case 1:
+			return new PacketPayloadArrays();
+		default:
+			return null;
+		}
+	}
+	
 	public abstract void writeData(ByteBuf data);
 	
 	public abstract void readData(ByteBuf data);

@@ -10,6 +10,8 @@ import org.lwjgl.opengl.GL11;
 import com.co2.molsci.client.container.ContainerCoffeeMachine;
 import com.co2.molsci.entity.tile.TileEntityCoffeeMachine;
 import com.co2.molsci.lib.Reference;
+import com.co2.molsci.network.PacketHandler;
+import com.co2.molsci.network.TileUpdatePacket;
 
 public class GuiCoffeeMachine extends GuiContainer
 {
@@ -35,21 +37,18 @@ public class GuiCoffeeMachine extends GuiContainer
 	}
 	
 	@Override
+	public void updateScreen()
+	{
+		super.updateScreen();
+		
+		((GuiButton)this.buttonList.get(0)).displayString = entity.shouldUseCream() ? "Cream" : "No Cream";
+	}
+	
+	@Override
 	protected void actionPerformed(GuiButton button)
 	{
 		if (buttonList.indexOf(button) == 0) 
-		{
-			if (entity.shouldUseCream()) 
-			{
-				button.displayString = "No Cream";
-				entity.setUseCream(false);
-			} 
-			else 
-			{
-				button.displayString = "Cream";
-				entity.setUseCream(true);
-			}
-		}
+			PacketHandler.instance.sendToServer(new TileUpdatePacket(entity));
 	}
 
 	@Override

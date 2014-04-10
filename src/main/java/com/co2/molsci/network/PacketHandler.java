@@ -3,6 +3,7 @@ package com.co2.molsci.network;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 
+import java.io.IOException;
 import java.util.EnumMap;
 
 import net.minecraft.client.Minecraft;
@@ -10,12 +11,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.Packet;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import org.apache.logging.log4j.Level;
 
 import com.co2.molsci.MolecularScience;
+import com.co2.molsci.lib.PacketIds;
 import com.co2.molsci.lib.Reference;
+import com.co2.molsci.network.data.INetworkTile;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.FMLEmbeddedChannel;
@@ -37,6 +41,9 @@ public class PacketHandler extends FMLIndexedMessageToMessageCodec<MSPacket>
 		
 		instance = new PacketHandler();
 		instance.channels = NetworkRegistry.INSTANCE.newChannel(Reference.MOD_CHANNEL, instance);
+		
+		instance.addDiscriminator(0, UpdatePacket.class);
+		instance.addDiscriminator(1, TileUpdatePacket.class);
 	}
 	
 	@Override
@@ -50,18 +57,45 @@ public class PacketHandler extends FMLIndexedMessageToMessageCodec<MSPacket>
 	{
 		msg.readData(source);
 		
-		switch (FMLCommonHandler.instance().getEffectiveSide())
+		try
 		{
-		case CLIENT:
-			msg.executeClient(Minecraft.getMinecraft().thePlayer);
-			break;
-		case SERVER:
 			INetHandler net = ctx.channel().attr(NetworkRegistry.NET_HANDLER).get();
-			msg.executeServer(((NetHandlerPlayServer)net).playerEntity);
-			break;
-		default:
-			break;
+			EntityPlayer player = null;
+			if (FMLCommonHandler.instance().getEffectiveSide().isServer())
+				player = ((NetHandlerPlayServer)net).playerEntity;
+			else
+				player = Minecraft.getMinecraft().thePlayer;
+			
+			if (player == null)
+				return;
+			
+			switch (msg.getId())
+			{
+			case PacketIds.TILE_UPDATE:
+				handleTileUpdate(player, (TileUpdatePacket)msg);
+				break;
+			}
 		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	private void handleTileUpdate(EntityPlayer player, TileUpdatePacket packet) throws IOException
+	{
+		World world = player.worldObj;
+		
+		if (!packet.targetExists(world))
+			return;
+		
+		TileEntity entity = packet.getTarget(world);
+		
+		if (!(entity instanceof INetworkTile))
+			return;
+		
+		INetworkTile tile = (INetworkTile) entity;
+		tile.handleUpdatePacket(packet);
 	}
 	
 	public void sendToAllClients(Packet packet, World world, int x, int y, int z, int maxDistance) 

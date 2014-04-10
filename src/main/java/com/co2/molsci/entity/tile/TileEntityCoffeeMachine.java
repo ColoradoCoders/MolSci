@@ -1,8 +1,7 @@
 package com.co2.molsci.entity.tile;
 
-import com.co2.molsci.common.MSRepo;
+import java.io.IOException;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
@@ -15,7 +14,16 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 
-public class TileEntityCoffeeMachine extends TileEntity implements IInventory
+import com.co2.molsci.common.MSRepo;
+import com.co2.molsci.network.PacketHandler;
+import com.co2.molsci.network.UpdatePacket;
+import com.co2.molsci.network.data.INetworkTile;
+import com.co2.molsci.network.data.PacketPayload;
+import com.co2.molsci.network.data.PacketPayloadArrays;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+
+public class TileEntityCoffeeMachine extends TileEntity implements IInventory, INetworkTile
 {
 	public static final int MAX_MILK_LEVEL = 1000;
 	public static final int MAX_WATER_LEVEL = 5000;
@@ -32,15 +40,12 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 	//If it should use cream
 	private boolean useCream;
 	
-	private int lastCraft;
-	
 	public TileEntityCoffeeMachine()
 	{
 		super();
 		inventory = new ItemStack[5];
 		waterLevel = 0;
 		milkLevel = 0;
-		lastCraft = 0;
 		useCream = true;
 	}
 	
@@ -48,7 +53,6 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 	public void updateEntity()
 	{
 		super.updateEntity();
-		++lastCraft;
 	}
 	
 	private void updateInput()
@@ -57,7 +61,6 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 			return;
 		
 		int type = inventory[1].getItemDamage();
-		System.out.println("Last craft: " + lastCraft);
 		
 		if (inventory[1].stackSize <= 1)
 			inventory[1] = null;
@@ -71,8 +74,6 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 		
 		boolean cream = shouldUseCream() && removeMilkIfPossible(50);
 		
-		System.out.println("Update. hasOutput: " + hasOutput() + " inv[3]: " + (inventory[3] != null) + " cream: " + cream);
-		
 		switch (type)
 		{
 		case 1:
@@ -85,9 +86,6 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 		
 		if (cream)
 			inventory[3].setItemDamage(inventory[3].getItemDamage() + 1);
-		
-		lastCraft = 0;
-		System.out.println("Reset lastCraft for entity " + this + " server: " + FMLCommonHandler.instance().getEffectiveSide().isServer());
 	}
 	
 	private void tryAddLiquids()
@@ -367,5 +365,33 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory
 	public boolean canRemoveMilk(int amt)
 	{
 		return (milkLevel - amt) >= 0;
+	}
+
+	@Override
+	public void handleUpdatePacket(UpdatePacket packet) throws IOException 
+	{
+		if (!(packet.payload instanceof PacketPayloadArrays))
+			return;
+		
+		switch (((PacketPayloadArrays)packet.payload).intPayload[0])
+		{
+		case 0:
+			useCream = !useCream;
+			if (FMLCommonHandler.instance().getEffectiveSide().isServer())
+				PacketHandler.instance.sendToAllClients(packet, this.worldObj, this.xCoord, this.yCoord, this.zCoord, -1);
+			break;
+		}
+	}
+
+	@Override
+	public UpdatePacket getUpdatePacket() 
+	{
+		return null;
+	}
+
+	@Override
+	public PacketPayload getPacketPayload() 
+	{
+		return (new PacketPayloadArrays()).append(0);
 	}
 }
