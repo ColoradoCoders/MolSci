@@ -80,7 +80,7 @@ public class BlockCoffeePlant extends BlockCrops
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int meta, int fortune)
 	{
-		ArrayList<ItemStack> retval = super.getDrops(world, x, y, z, meta, fortune);
+		ArrayList<ItemStack> retval = new ArrayList<ItemStack>();
 		
 		if (meta < (GROWTH_STAGES - 1))
 			retval.add(new ItemStack(MSRepo.coffeeBean));
@@ -93,7 +93,7 @@ public class BlockCoffeePlant extends BlockCrops
 	@Override
 	public int getRenderType()
 	{
-		return 6;
+		return 1;
 	}
 	
 	@Override

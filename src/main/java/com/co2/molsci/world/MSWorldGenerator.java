@@ -27,10 +27,10 @@ public class MSWorldGenerator implements IWorldGenerator
 		switch (world.provider.dimensionId)
 		{
 		case -1:
-			generateNether(world, random, cx, cz);
+			generateNether(world, random, cx * 16, cz * 16);
 			return;
 		case 0:
-			generateOverworldNature(world, random, cx, cz);
+			generateOverworldNature(world, random, cx * 16, cz * 16);
 			return;
 		}
 	}
