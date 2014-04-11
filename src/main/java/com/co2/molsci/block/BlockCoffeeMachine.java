@@ -1,8 +1,10 @@
 package com.co2.molsci.block;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
@@ -13,6 +15,7 @@ import com.co2.molsci.MolecularScience;
 import com.co2.molsci.client.render.CoffeeMachineRenderer;
 import com.co2.molsci.entity.tile.TileEntityCoffeeMachine;
 import com.co2.molsci.lib.GuiIds;
+import com.co2.molsci.util.MSUtils;
 
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 
@@ -32,6 +35,20 @@ public class BlockCoffeeMachine extends MSBlockContainer
 			FMLNetworkHandler.openGui(player, MolecularScience.instance, GuiIds.COFFEE_MACHINE, world, x, y, z);
 		
 		return true;
+	}
+	
+	@Override
+	public void breakBlock(World world, int x, int y, int z, Block block, int i)
+	{
+		TileEntity entity = world.getTileEntity(x, y, z);
+		
+		if (entity instanceof IInventory && !world.isRemote)
+		{
+			MSUtils.dropItems(world, (IInventory) entity, x, y, z);
+			MSUtils.clearInventory((IInventory) entity);
+		}
+		
+		super.breakBlock(world, x, y, z, block, i);
 	}
 	
 	@Override

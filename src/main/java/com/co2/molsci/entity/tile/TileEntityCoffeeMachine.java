@@ -115,15 +115,21 @@ public class TileEntityCoffeeMachine extends TileEntity implements IInventory, I
 			if (useCream)
 				removeMilkIfPossible(50);
 			
-			if (inventory[1].stackSize <= 1)
-				inventory[1] = null;
-			else
-				--(inventory[1].stackSize);
+			if (inventory[1] != null)
+			{
+				if (inventory[1].stackSize <= 1)
+					inventory[1] = null;
+				else
+					--(inventory[1].stackSize);
+			}
 			
-			if (inventory[2].stackSize <= 1)
-				inventory[2] = null;
-			else
-				--(inventory[2].stackSize);
+			if (inventory[2] != null)
+			{
+				if (inventory[2].stackSize <= 1)
+					inventory[2] = null;
+				else
+					--(inventory[2].stackSize);
+			}
 		}
 		
 		tryAddLiquids();

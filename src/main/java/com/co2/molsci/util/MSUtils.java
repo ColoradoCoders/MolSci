@@ -4,7 +4,10 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.Arrays;
 
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 public class MSUtils 
 {
@@ -87,5 +90,38 @@ public class MSUtils
 	public static boolean isNullOrEmpty(String s)
 	{
 		return (s == null) || (s.length() < 1);
+	}
+	
+	public static void dropItems(World world, ItemStack stack, int x, int y, int z)
+	{
+		if (stack == null || stack.stackSize < 1)
+			return;
+		
+		float f = 0.7f;
+		double d = (world.rand.nextFloat() * f) + (1.0f - f) * 0.5;
+		double d2 = (world.rand.nextFloat() * f) + (1.0f - f) * 0.5;
+		double d3 = (world.rand.nextFloat() * f) + (1.0f - f) * 0.5;
+		
+		EntityItem item = new EntityItem(world, x + d, y + d2, z + d3, stack);
+		item.delayBeforeCanPickup = 10;
+		
+		world.spawnEntityInWorld(item);
+	}
+	
+	public static void dropItems(World world, IInventory inv, int x, int y, int z)
+	{
+		for (int i = 0; i < inv.getSizeInventory(); ++i)
+		{
+			ItemStack items = inv.getStackInSlot(i);
+			
+			if (items != null && items.stackSize > 0)
+				dropItems(world, items, x, y, z);
+		}
+	}
+	
+	public static void clearInventory(IInventory inv)
+	{
+		for (int i = 0; i < inv.getSizeInventory(); ++i)
+			inv.setInventorySlotContents(i, null);
 	}
 }
