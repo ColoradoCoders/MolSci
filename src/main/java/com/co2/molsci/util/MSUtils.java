@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.Arrays;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -123,5 +124,21 @@ public class MSUtils
 	{
 		for (int i = 0; i < inv.getSizeInventory(); ++i)
 			inv.setInventorySlotContents(i, null);
+	}
+	
+	public static int getMaxHeightOfBlockWithSpaceAbove(World world, int x, int z, Block[] blocks)
+	{
+		int highest = -1;
+		
+		for (int y = 254; y >= 0; --y)
+		{
+			if (arrayContains(blocks, world.getBlock(x, y, z)) && world.isAirBlock(x, y + 1, z))
+			{
+				highest = y;
+				break;
+			}
+		}
+		
+		return highest;
 	}
 }

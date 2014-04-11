@@ -18,6 +18,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class MSBlock extends Block
 {
 	String[] textureNames;
+	
+	@SideOnly(Side.CLIENT)
 	IIcon[] icons;
 	
 	public MSBlock(Material mat, float hardness, String[] textureNames)

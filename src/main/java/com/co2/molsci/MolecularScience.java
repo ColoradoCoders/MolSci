@@ -11,6 +11,7 @@ import com.co2.molsci.config.ConfigHandler;
 import com.co2.molsci.lib.Reference;
 import com.co2.molsci.network.PacketHandler;
 import com.co2.molsci.proxy.IProxy;
+import com.co2.molsci.world.MSWorldGenerator;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -20,6 +21,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.MOD_VERSION)
 public class MolecularScience
@@ -64,6 +66,9 @@ public class MolecularScience
 		
 		//Register the tile entities
 		proxy.registerTileEntities();
+		
+		//Register the world generator
+		GameRegistry.registerWorldGenerator(new MSWorldGenerator(), 0);
 	}
 	
 	@EventHandler

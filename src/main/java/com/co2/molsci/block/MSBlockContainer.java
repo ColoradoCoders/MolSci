@@ -17,6 +17,8 @@ import net.minecraft.util.IIcon;
 public abstract class MSBlockContainer extends BlockContainer
 {
 	String[] textureNames;
+	
+	@SideOnly(Side.CLIENT)
 	IIcon[] icons;
 	
 	public MSBlockContainer(Material mat, float hard, String[] textures)
