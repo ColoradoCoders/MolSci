@@ -1,29 +1,32 @@
 package com.co2.molsci.util;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ChatComponentText;
 
 public class ResearchManager
-{
-	NBTTagList test = new NBTTagList();
-	
-	public void addBuff(EntityPlayer player, String category, byte choice) {
-		player.getEntityData().getByteArray(category)[getLevel(player, category)] = choice;
-	}
+{	
+	private final String KEY = "molsciResearch";
 	
 	public void addRP(EntityPlayer player, String category, int amount)
-	{
-		player.getEntityData().setInteger(category, amount);
+	{	
+		int lvl = getLevel(player, category);
+		int sum = getRP(player, category) + amount;
+		player.getEntityData().getCompoundTag(KEY).setInteger(category, sum);
+		if(lvl > getLevel(player, category)) {
+			player.getEntityData().getCompoundTag(KEY).setBoolean("canUpgrade", true);
+			ChatComponentText message = new ChatComponentText("Congrats you just leveled up! Press the P key to pick a new buff.");
+			player.addChatMessage(message);
+		}
 	}
 	
 	public byte getBuff(EntityPlayer player, String category)
 	{
-		return player.getEntityData().getByteArray(category)[getLevel(player, category)];
+		return player.getEntityData().getCompoundTag(KEY).getByteArray(category)[getLevel(player, category)];
 	}
 	
 	public int getLevel(EntityPlayer player, String category)
 	{
-		int total = player.getEntityData().getInteger(category);
+		int total = player.getEntityData().getCompoundTag(KEY).getInteger(category);
 		if(total < 500)
 			return 0;
 		else if(total < 1500)
@@ -38,7 +41,17 @@ public class ResearchManager
 			return 5;
 	}
 	
-	public int getSpecificLevel(EntityPlayer player, String category) {
-		return player.getEntityData().getInteger(category);
+	public int getRP(EntityPlayer player, String category) {
+		return player.getEntityData().getCompoundTag(KEY).getInteger(category);
 	}
+	
+	public boolean canUpgrade(EntityPlayer player) {
+		return player.getEntityData().getCompoundTag(KEY).getBoolean("canUpgrade");
+	}
+	
+	// does not check if the player can upgrade
+	public void setBuff(EntityPlayer player, String category, Byte choice) {
+		player.getEntityData().getCompoundTag(KEY).getByteArray(category)[getLevel(player, category)] = choice;
+	}
+	
 }
