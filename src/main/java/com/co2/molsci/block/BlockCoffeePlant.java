@@ -4,14 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
@@ -25,7 +29,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class BlockCoffeePlant extends BlockCrops
 {
 	public static final int GROWTH_STAGES = 5;
-	public static final String[] textureNames = { "coffee", "coffee", "coffee", "coffee", "coffee" };
+	public static final String[] textureNames = { "coffeePlant1", "coffeePlant2", "coffeePlant3", "coffeePlant4", "coffeePlant5" };
 	
 	@SideOnly(Side.CLIENT)
 	public IIcon[] icons;
@@ -53,6 +57,22 @@ public class BlockCoffeePlant extends BlockCrops
 					world.setBlockMetadataWithNotify(x, y, z, meta, 2);
 				}
 			}
+			else
+			{
+				if (!world.isAirBlock(x, y + 1, z))
+					return;
+				
+				if (random.nextFloat() < WorldGenSettings.COFFEE_PLANT_GROWTH_RATE)
+				{
+					int height = 1;
+					for (; world.getBlock(x, y - height, z) == MSRepo.coffeePlant; ++height);
+					
+					if (height >= 3)
+						return;
+					
+					world.setBlock(x, y + 1, z, MSRepo.coffeePlant, 0, 3);
+				}
+			}
 		}
 	}
 	
@@ -78,6 +98,17 @@ public class BlockCoffeePlant extends BlockCrops
 	}
 	
 	@Override
+	public boolean canPlaceBlockAt(World world, int x, int y, int z)
+	{
+		Block b = world.getBlock(x, y - 1, z);
+		
+		if (b == Blocks.dirt || b == Blocks.grass)
+			return true;
+		
+		return false;
+	}
+	
+	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int meta, int fortune)
 	{
 		ArrayList<ItemStack> retval = new ArrayList<ItemStack>();
@@ -89,6 +120,29 @@ public class BlockCoffeePlant extends BlockCrops
 		
 		return retval;
 	}
+	
+	@Override
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
+	{
+		int meta = world.getBlockMetadata(x, y, z);
+		
+		switch (meta)
+		{
+		case 0:
+			return AxisAlignedBB.getBoundingBox(x + 0.3, y, z + 0.3, x + 0.7, y + 0.3, z + 0.7);
+		case 1:
+			return AxisAlignedBB.getBoundingBox(x + 0.2, y, z + 0.2, x + 0.8, y + 0.7, z + 0.8);
+		case 2:
+			return AxisAlignedBB.getBoundingBox(x + 0.2, y, z + 0.2, x + 0.8, y + 0.8, z + 0.8);
+		case 3:
+			return AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1);
+		case 4:
+		default:
+			return AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1);
+		}
+	}
+	
+	//TODO bet block bounds
 	
 	@Override
 	public int getRenderType()
