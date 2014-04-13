@@ -41,7 +41,11 @@ public class MSWorldGenerator implements IWorldGenerator
 		int bz = cz + random.nextInt(16);
 		int by = MSUtils.getMaxHeightOfBlockWithSpaceAbove(world, bx, bz, new Block[] { Blocks.dirt, Blocks.grass });
 		
-		if (random.nextFloat() < WorldGenSettings.COFFEE_PLANT_SPAWN_CHANCE && by < 255 && by > 60)
+		int bid = world.getWorldChunkManager().getBiomeGenAt(bx, bz).biomeID;
+		
+		boolean canCoffee = (bid == 21) || (bid == 22) || (bid == 23) || (bid == 149) || (bid == 151);
+		
+		if (canCoffee && random.nextFloat() < WorldGenSettings.COFFEE_PLANT_SPAWN_CHANCE && by < 255 && by > 60)
 			coffeePlantGen.generate(world, random, bx, by, bz);
 	}
 	

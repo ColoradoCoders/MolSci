@@ -25,7 +25,10 @@ public class MSItemFood extends ItemFood
 	float[] saturation;
 	String[] unlocalizedNames;
 	String[] iconNames;
+	
+	@SideOnly(Side.CLIENT)
 	IIcon[] icons;
+	
 	boolean isLiquid;
 	
 	public MSItemFood(int[] hunger, float[] saturation, String[] unlocalizedNames, String[] iconNames)

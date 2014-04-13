@@ -18,6 +18,8 @@ public class MSItem extends Item
 {
 	String[] unlocalizedNames;
 	String[] iconNames;
+	
+	@SideOnly(Side.CLIENT)
 	IIcon[] icons;
 	
 	public MSItem(String[] unlocalizedNames, String[] iconNames)

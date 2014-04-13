@@ -102,10 +102,7 @@ public class BlockCoffeePlant extends BlockCrops
 	{
 		Block b = world.getBlock(x, y - 1, z);
 		
-		if (b == Blocks.dirt || b == Blocks.grass)
-			return true;
-		
-		return false;
+		return (b == Blocks.dirt);
 	}
 	
 	@Override
@@ -143,6 +140,11 @@ public class BlockCoffeePlant extends BlockCrops
 	}
 	
 	//TODO bet block bounds
+	@Override
+	public void setBlockBoundsBasedOnState(IBlockAccess access, int x, int y, int z)
+	{
+		super.setBlockBoundsBasedOnState(access, x, y, z);
+	}
 	
 	@Override
 	public int getRenderType()
