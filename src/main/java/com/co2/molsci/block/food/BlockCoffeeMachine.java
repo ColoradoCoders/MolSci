@@ -1,4 +1,4 @@
-package com.co2.molsci.block;
+package com.co2.molsci.block.food;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -12,6 +12,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.co2.molsci.MolecularScience;
+import com.co2.molsci.block.MSBlockContainer;
 import com.co2.molsci.client.render.CoffeeMachineRenderer;
 import com.co2.molsci.entity.tile.TileEntityCoffeeMachine;
 import com.co2.molsci.lib.GuiIds;

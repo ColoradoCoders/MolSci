@@ -23,7 +23,7 @@ public class ItemCoffeeBean extends MSItemFood
 	@Override
 	public void onFoodEaten(ItemStack stack, World world, EntityPlayer player)
 	{
-		
+		// TODO: Add potion effects
 	}
 	
 	@Override
@@ -32,9 +32,9 @@ public class ItemCoffeeBean extends MSItemFood
 		int bid = world.getWorldChunkManager().getBiomeGenAt(x, z).biomeID;
 		boolean canCoffee = (bid == 21) || (bid == 22) || (bid == 23) || (bid == 149) || (bid == 151);
 		
-		if (MSRepo.coffeePlant.canPlaceBlockAt(world, x, y, z) && world.isAirBlock(x, y + 1, z))
+		if (canCoffee && MSRepo.coffeeSapling.canPlaceBlockAt(world, x, y, z) && world.isAirBlock(x, y + 1, z))
 		{
-			world.setBlock(x, y + 1, z, MSRepo.coffeePlant, 0, 3);
+			world.setBlock(x, y + 1, z, MSRepo.coffeeSapling, 0, 3);
 			--(stack.stackSize);
 			return true;
 		}

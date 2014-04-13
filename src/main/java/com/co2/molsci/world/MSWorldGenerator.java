@@ -18,7 +18,7 @@ public class MSWorldGenerator implements IWorldGenerator
 	
 	public MSWorldGenerator()
 	{
-		coffeePlantGen = new CoffeePlantGen(false);
+		coffeePlantGen = new CoffeePlantGen(true);
 	}
 	
 	@Override

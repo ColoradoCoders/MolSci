@@ -1,4 +1,4 @@
-package com.co2.molsci.block;
+package com.co2.molsci.block.food;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -17,24 +15,24 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.FakePlayer;
 
 import com.co2.molsci.common.MSRepo;
 import com.co2.molsci.config.WorldGenSettings;
 import com.co2.molsci.lib.Reference;
+import com.co2.molsci.world.CoffeePlantGen;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockCoffeePlant extends BlockCrops
+public class BlockCoffeeSapling extends BlockCrops
 {
 	public static final int GROWTH_STAGES = 5;
-	public static final String[] textureNames = { "coffeePlant1", "coffeePlant2", "coffeePlant3", "coffeePlant4", "coffeePlant5" };
+	public static final String[] textureNames = { "coffeeSapling" };
 	
 	@SideOnly(Side.CLIENT)
 	public IIcon[] icons;
 	
-	public BlockCoffeePlant()
+	public BlockCoffeeSapling()
 	{
 		super();
 		setTickRandomly(true);
@@ -47,54 +45,12 @@ public class BlockCoffeePlant extends BlockCrops
 		
 		if (world.getBlockLightValue(x, y, z) >= 4)
 		{
-			int meta = world.getBlockMetadata(x, y, z);
-			
-			if (meta < (GROWTH_STAGES - 1))
+			if (random.nextFloat() < WorldGenSettings.COFFEE_PLANT_GROWTH_RATE)
 			{
-				if (random.nextFloat() < WorldGenSettings.COFFEE_PLANT_GROWTH_RATE)
-				{
-					++meta;
-					world.setBlockMetadataWithNotify(x, y, z, meta, 2);
-				}
-			}
-			else
-			{
-				if (!world.isAirBlock(x, y + 1, z))
-					return;
-				
-				if (random.nextFloat() < WorldGenSettings.COFFEE_PLANT_GROWTH_RATE)
-				{
-					int height = 1;
-					for (; world.getBlock(x, y - height, z) == MSRepo.coffeePlant; ++height);
-					
-					if (height >= 3)
-						return;
-					
-					world.setBlock(x, y + 1, z, MSRepo.coffeePlant, 0, 3);
-				}
+				CoffeePlantGen gen = new CoffeePlantGen(true);
+				gen.generateTree(world, x, y, z);
 			}
 		}
-	}
-	
-	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int i, float f, float f2, float f3)
-	{
-		int meta = world.getBlockMetadata(x, y, z);
-		if (meta >= (GROWTH_STAGES - 1))
-		{
-			if (world.isRemote)
-				return true;
-			
-			world.setBlockMetadataWithNotify(x, y, z, (GROWTH_STAGES - 2), 2);
-			EntityItem item = new EntityItem(world, player.posX, player.posY - 1.0, player.posZ, new ItemStack(MSRepo.coffeeBean));
-			world.spawnEntityInWorld(item);
-			if (!(player instanceof FakePlayer))
-				item.onCollideWithPlayer(player);
-			
-			return true; 
-		}
-		
-		return false;
 	}
 	
 	@Override
@@ -110,10 +66,7 @@ public class BlockCoffeePlant extends BlockCrops
 	{
 		ArrayList<ItemStack> retval = new ArrayList<ItemStack>();
 		
-		if (meta < (GROWTH_STAGES - 1))
-			retval.add(new ItemStack(MSRepo.coffeeBean));
-		else
-			retval.add(new ItemStack(MSRepo.coffeeBean, 2));
+		retval.add(new ItemStack(MSRepo.coffeeBean));
 		
 		return retval;
 	}

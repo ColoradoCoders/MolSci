@@ -27,6 +27,7 @@ public class ConfigHandler
 			WorldGenSettings.COFFEE_PLANT_GEN_SIZE = con.get("WorldGen", "coffeePlantGenSize", WorldGenSettings.COFFEE_PLANT_GEN_SIZE_DEFAULT).getInt(WorldGenSettings.COFFEE_PLANT_GEN_SIZE_DEFAULT);
 			WorldGenSettings.COFFEE_PLANT_GROWTH_RATE = (float)con.get("WorldGen", "coffeePlantGrowthRate", WorldGenSettings.COFFEE_PLANT_GROWTH_RATE_DEFAULT).getDouble(WorldGenSettings.COFFEE_PLANT_GROWTH_RATE_DEFAULT);
 			WorldGenSettings.COFFEE_PLANT_SPAWN_CHANCE = (float)con.get("WorldGen", "coffePlantGenChange", WorldGenSettings.COFFEE_PLANT_SPAWN_CHANCE_DEFAULT).getDouble(WorldGenSettings.COFFEE_PLANT_SPAWN_CHANCE_DEFAULT);
+			WorldGenSettings.COFFEE_LEAVES_GROWTH_RATE = (float)con.get("WorldGen", "coffeeLeafGrowthRate", WorldGenSettings.COFFEE_LEAVES_GROWTH_RATE_DEFAULT).getDouble(WorldGenSettings.COFFEE_LEAVES_GROWTH_RATE_DEFAULT);
 		}
 		catch (Exception e)
 		{
