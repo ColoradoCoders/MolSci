@@ -28,9 +28,14 @@ public class BlockCoffeeLeaves extends MSBlock
 		
 		int meta = world.getBlockMetadata(x, y, z);
 		
-		if (world.getBlockLightValue(x, y, z) > 4)
+		System.out.println("Leaves ticked");
+		
+		if (world.getBlockLightValue(x, y, z) > 0)
 			if (meta == 0 && random.nextFloat() < WorldGenSettings.COFFEE_LEAVES_GROWTH_RATE)
+			{
 				world.setBlockMetadataWithNotify(x, y, x, 1, 3);
+				System.out.println("Leaves grown at (" + x + ", " + y + ", " + z + ").");
+			}
 	}
 	
 	@Override
