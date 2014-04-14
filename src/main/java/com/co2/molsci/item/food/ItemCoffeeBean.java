@@ -30,7 +30,7 @@ public class ItemCoffeeBean extends MSItemFood
 	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float xC, float yC, float zC)
 	{
 		int bid = world.getWorldChunkManager().getBiomeGenAt(x, z).biomeID;
-		boolean canCoffee = (bid == 21) || (bid == 22) || (bid == 23) || (bid == 149) || (bid == 151);
+		boolean canCoffee = (bid == 21) || (bid == 22) || (bid == 23) || (bid == 149) || (bid == 151) || (bid == 6) || (bid == 134);
 		
 		if (canCoffee && MSRepo.coffeeSapling.canPlaceBlockAt(world, x, y, z) && world.isAirBlock(x, y + 1, z))
 		{

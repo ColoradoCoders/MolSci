@@ -21,6 +21,8 @@ public class CoffeePlantGen extends WorldGenerator
 	@Override
 	public boolean generate(World world, Random random, int i, int j, int k)
 	{
+		System.out.println("Generating at (" + i + ", " + j + ", " + k + ")");
+		
 		for (int count = 0; count < WorldGenSettings.COFFEE_PLANT_GEN_SIZE; ++count)
 		{
 			generateTree(world, i, j, k);

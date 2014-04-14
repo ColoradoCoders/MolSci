@@ -28,14 +28,9 @@ public class BlockCoffeeLeaves extends MSBlock
 		
 		int meta = world.getBlockMetadata(x, y, z);
 		
-		System.out.println("Leaves ticked");
-		
 		if (world.getBlockLightValue(x, y, z) > 0)
 			if (meta == 0 && random.nextFloat() < WorldGenSettings.COFFEE_LEAVES_GROWTH_RATE)
-			{
-				world.setBlockMetadataWithNotify(x, y, x, 1, 3);
-				System.out.println("Leaves grown at (" + x + ", " + y + ", " + z + ").");
-			}
+				world.setBlockMetadataWithNotify(x, y, z, 1, 3);
 	}
 	
 	@Override
@@ -46,10 +41,10 @@ public class BlockCoffeeLeaves extends MSBlock
 		if (meta == 0)
 			return false;
 		
-		meta = 0;
-		
 		if (world.isRemote)
-			return true;
+			return false;
+		
+		world.setBlockMetadataWithNotify(x, y, z, 0, 3);
 			
 		EntityItem entityitem = new EntityItem(world, player.posX, player.posY - 1.0D, player.posZ, new ItemStack(MSRepo.coffeeBean));
 		world.spawnEntityInWorld(entityitem);
