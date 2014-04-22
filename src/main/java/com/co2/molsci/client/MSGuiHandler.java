@@ -4,8 +4,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-import com.co2.molsci.client.container.ContainerCoffeeMachine;
 import com.co2.molsci.client.gui.GuiCoffeeMachine;
+import com.co2.molsci.common.container.ContainerCoffeeMachine;
 import com.co2.molsci.entity.tile.TileEntityCoffeeMachine;
 import com.co2.molsci.lib.GuiIds;
 

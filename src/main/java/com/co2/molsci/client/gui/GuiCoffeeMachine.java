@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import com.co2.molsci.client.container.ContainerCoffeeMachine;
+import com.co2.molsci.common.container.ContainerCoffeeMachine;
 import com.co2.molsci.entity.tile.TileEntityCoffeeMachine;
 import com.co2.molsci.lib.Reference;
 import com.co2.molsci.network.PacketHandler;

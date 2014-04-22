@@ -1,4 +1,4 @@
-package com.co2.molsci.client.container;
+package com.co2.molsci.common.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;

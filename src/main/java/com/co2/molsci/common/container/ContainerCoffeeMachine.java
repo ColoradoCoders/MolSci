@@ -1,4 +1,4 @@
-package com.co2.molsci.client.container;
+package com.co2.molsci.common.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -6,9 +6,9 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-import com.co2.molsci.client.container.slot.OutputSlot;
-import com.co2.molsci.client.container.slot.WhitelistSlot;
 import com.co2.molsci.common.MSRepo;
+import com.co2.molsci.common.container.slot.OutputSlot;
+import com.co2.molsci.common.container.slot.WhitelistSlot;
 import com.co2.molsci.entity.tile.TileEntityCoffeeMachine;
 
 public class ContainerCoffeeMachine extends ContainerMS

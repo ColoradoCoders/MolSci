@@ -1,4 +1,4 @@
-package com.co2.molsci.client.container.slot;
+package com.co2.molsci.common.container.slot;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;

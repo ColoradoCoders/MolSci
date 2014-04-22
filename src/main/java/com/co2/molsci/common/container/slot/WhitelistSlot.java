@@ -1,4 +1,4 @@
-package com.co2.molsci.client.container.slot;
+package com.co2.molsci.common.container.slot;
 
 import com.co2.molsci.util.MSUtils;
 
